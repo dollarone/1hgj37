@@ -116,7 +116,8 @@ loadLevel : function(levelName) {
     //  Player physics properties. Give the little guy a slight bounce.
     this.player.body.bounce.y = 0.2;
     this.player.body.gravity.y = 300;
-    this.player.scale.setTo(0.4);
+this.player.anchor.setTo(0.5);
+    this.player.scale.setTo(-0.4, 0.4);
 
     //  Our two animations, walking left and right.
     this.player.animations.add('left', [0, 1, 2, 3], 10, true);
