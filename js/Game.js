@@ -1,6 +1,5 @@
 var PlatfomerGame = PlatformerGame || {};
 
-//title screen
 PlatformerGame.Game = function(){};
 
 PlatformerGame.Game.prototype = {
@@ -9,8 +8,11 @@ PlatformerGame.Game.prototype = {
     this.level = 1;
 
     this.music1 = this.game.add.audio('music1');
-    this.music2 = this.game.add.audio('music3');
+    this.music2 = this.game.add.audio('music2');
     this.music3 = this.game.add.audio('music3');
+    this.music1.loop = true;
+    this.music2.loop = true;
+    this.music3.loop = true;
 
     this.sky = this.game.add.sprite(0, 0, 'sky');
 
@@ -25,9 +27,8 @@ PlatformerGame.Game.prototype = {
     this.rkey = this.game.input.keyboard.addKey(Phaser.Keyboard.R);
     this.rkey.onDown.add(this.restart, this);
 
-    this.music1.loop = true;
     this.music1.play();
-    this.musicLevel = 1;
+    this.musicState = 1; // 1 = 1 is playing. 2 = 1 is scheduled to stop 3 = 2 is playing 4 = 2 is scheudled to stop 5 = 3 playing
 
   },
 
@@ -51,10 +52,7 @@ PlatformerGame.Game.prototype = {
         if (this.player2.body.blocked.down) {
             this.player2.body.velocity.y = -100;
         }
-        console.log("1:" + this.player.x + " / " + this.player.y);
-        console.log("2:" + this.player2.x + " / " + this.player2.y);
     }
-
   },
   distanceBetweenTwoPoints: function(a, b) {
         var xs = b.x - a.x;
@@ -81,12 +79,14 @@ PlatformerGame.Game.prototype = {
         }
         else {
             this.loadLevel(this.level);
-            if (this.musicLevel == 1) {
-                this.music1.onLoop.removeAll();
+             // 1 = 1 is playing. 2 = 1 is scheduled to stop 3 = 2 is playing 4 = 2 is scheduled to stop 5 = 3 playing
+
+            if (this.musicState == 1) {
+                this.musicState++;
                 this.music1.onLoop.add(this.nextMusic, this);
             }
-            else if (this.musicLevel == 2) {
-                this.music2.onLoop.removeAll();
+            else if (this.musicState == 3) {
+                this.musicState++;
                 this.music2.onLoop.add(this.nextMusic, this);
             }
         }
@@ -191,21 +191,25 @@ loadLevel : function(levelName) {
   },
 
   restart : function() {
-    this.loadLevel(this.level);
+    if (!this.game.paused) {
+        this.loadLevel(this.level);
+    }
   },
 
   nextMusic : function() {
-    if (this.musicLevel == 1) {
+     // 1 = 1 is playing. 2 = 1 is scheduled to stop 3 = 2 is playing 4 = 2 is scheudled to stop 5 = 3 playing
+
+    if (this.musicState == 2) {
+        this.musicState++;
         this.music1.stop();
         this.music2.loop = true;
         this.music2.play();
-        this.musicLevel++;
     }
-    else if (this.musicLevel == 2) {
+    else if (this.musicState == 4) {
+        this.musicState++;
         this.music2.stop();
         this.music3.loop = true;
         this.music3.play();
-        this.musicLevel++;
-     }
+    }
   },
 };

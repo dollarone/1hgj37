@@ -20,7 +20,7 @@ PlatformerGame.Boot.prototype = {
     this.scale.pageAlignVertically = true;
 
     //screen size will be set automatically
-    this.scale.setScreenSize(true);
+    //this.scale.setScreenSize(true);
 
     //physics system
     this.game.physics.startSystem(Phaser.Physics.ARCADE);
