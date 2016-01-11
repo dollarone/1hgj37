@@ -184,9 +184,12 @@ loadLevel : function(levelName) {
 
         this.goal.x = this.game.world.width /2;
 
+
+        if (this.cloud) {
+            this.cloud.destroy();
+        }
         this.cloud = this.game.add.sprite(this.goal.x + 30, this.goal.y + 60, 'cloud');
         this.cloud.anchor.set(0.5);
-
     }
   },
 
